@@ -1,0 +1,5 @@
+config.json
+venv
+tmp/*
+inventory
+__pycache__
