@@ -119,11 +119,11 @@ def check_sign():
 def sign():
     def write_pem(content, file):
         with open(file, 'w') as f:
-            f.write(content)
+            f.write(str(content))
 
     s, k = signature.sign_init(f"{tmp}/audit.log")
     write_pem(s, f"{tmp}/s.pem")
-    write_pem(s, f"{tmp}/k.pem")
+    write_pem(k, f"{tmp}/k.pem")
 
 
 if __name__ == "__main__":
