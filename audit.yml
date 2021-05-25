@@ -3,23 +3,21 @@
   become_user: root
   become: true
   tasks:
-  - name: Update cashe
-    apk:
-      update_cache: yes
-
   - name: Install Package and Precheck
-    apk: name={{ item }} state=latest
+    apt: name={{ item }} state=latest
     with_items: 
       - lynis
     tags:
       - install
-
+    
   - name: Run audit system...
-    shell: lynis audit system > /tmp/audit.log
+    shell: lynis audit system > ~/ansiblar/tmp/audit.log
     tags: 
       - run-audit
+
+  - name: Create signature
+    shell: python3 ~/ansiblar/main.py sign
+    tags: 
+      - sign
   
-  - name: Create logs
-    shell: tail -25 /var/log/lynis.log > /tmp/lynis.log
-    tags:
-      - logs
+  

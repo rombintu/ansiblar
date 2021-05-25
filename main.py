@@ -2,8 +2,6 @@ import os
 import json
 import sys
 import paramiko 
-
-
 # https://ru.wikibooks.org/wiki/SQLAlchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -11,6 +9,10 @@ from sqlalchemy.orm import sessionmaker
 from model import Audited
 
 from datetime import datetime
+
+# ЭЦП
+import signature
+
 
 # GLOBAL
 config = os.getcwd() + '/config.json'
@@ -48,6 +50,7 @@ def init():
 def select():
     # Если нужна postgres то раскоменчиваем следующую строчку
     # engine = create_engine('postgresql://test:password@localhost:5432/audit')
+    # А эту закоменчиваем
     engine = create_engine('sqlite:///db.sqlite')
     Session = sessionmaker(bind=engine)
     session = Session()
@@ -93,6 +96,36 @@ def getlogs():
     # Сохраняем
     session.commit()
 
+def check_sign():
+    check = False
+    def func(dir):
+        if check:
+            print("Signature OK")
+        else:
+            print("Signature NOT OK")
+
+
+    files=[]
+    files = [f for f in sorted(os.listdir(tmp))]
+    for i, host in enumerate(files):
+        print(f"[{i}]: {host}")
+    
+    try:
+        user_input = int(input('Enter [N]: '))
+        func(f"{tmp}/{files[user_input]}")
+    except Exception as e:
+        print(e)
+
+def sign():
+    def write_pem(content, file):
+        with open(file, 'w') as f:
+            f.write(content)
+
+    s, k = signature.sign_init(f"{tmp}/audit.log")
+    write_pem(s, f"{tmp}/s.pem")
+    write_pem(s, f"{tmp}/k.pem")
+
+
 if __name__ == "__main__":
     print('Start program...')
     user_command = sys.argv[1]
@@ -105,3 +138,9 @@ if __name__ == "__main__":
         getlogs()
     elif user_command == 'ping':
         ping()
+    elif user_command == 'check':
+        check_sign()
+    elif user_command == 'sign':
+        sign()
+    else:
+        print('Command not found')

@@ -6,7 +6,6 @@ ansible
 python3
 openssh
 ```
-
 ## Подготовка
 ```
 pip3 install venv
@@ -24,7 +23,14 @@ python model.py
 cp config.json config.json.encode
 ansible-vault decrypt config.json.encode
 ```
-
+### Перекидываем ключи
+*На сервере:
+`cat ~/.ssh/id_rsa.pub`
+копируем все что выдало
+подключаемся по ssh к клиенту: ssh linuxlite@<адресс_клиента>
+*На клиенте:
+`nano ~/.ssh/authorized_keys`
+вставляем туда скопированный ключ, ctr+S (Сохранить) ctr+X (Выйти)
 ## Создание файла Inventory
 ```
 python3 main.py init
