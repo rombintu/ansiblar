@@ -16,7 +16,7 @@ import signature
 
 
 # GLOBAL
-keys = '/root/ansiblar/tmp'
+# keys = '/root/ansiblar/tmp'
 # keys = 'tmp/192.168.122.76'
 config = os.getcwd() + '/config.json'
 tmp = os.getcwd() + '/tmp'
@@ -100,23 +100,22 @@ def getlogs():
     session.commit()
 
 def check_sign():
-    try:
-        files=[]
-        files = [f for f in sorted(os.listdir(tmp))]
-        for i, host in enumerate(files):
-            print(f"[{i}]: {host}")
-        user_input = int(input('Enter [N]: '))
-        check = signature.check_sign(
-            f"{tmp}/{files[user_input]}/audit.log",
-            f'{tmp}/{files[user_input]}/k.pem',
-            f'{tmp}/{files[user_input]}/s.pem'
-                                    )
-        if check:
-            print("Signature OK")
-        else:
-            print("Signature NOT OK")
-    except Exception as e:
-        print(e)
+    # try:
+    files=[]
+    files = [f for f in sorted(os.listdir(tmp))]
+    for i, host in enumerate(files):
+        print(f"[{i}]: {host}")
+    user_input = int(input('Enter [N]: '))
+    check = signature.check_sign(
+        f"{tmp}/{files[user_input]}/audit.log",
+        f'{tmp}/{files[user_input]}/k.pem',
+        f'{tmp}/{files[user_input]}/s.pem')
+    if check:
+        print("Signature OK")
+    else:
+        print("Signature NOT OK")
+    # except Exception as e:
+    #     print(e)
 
 def sign():
     def write_pem(content, file):
@@ -139,7 +138,6 @@ if __name__ == "__main__":
         select()
     elif user_command == 'getlogs':
         getlogs()
-        check_sign()
     elif user_command == 'ping':
         ping()
     elif user_command == 'sign':

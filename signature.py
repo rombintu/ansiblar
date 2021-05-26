@@ -6,7 +6,7 @@ from Crypto.Signature import pkcs1_15
 from Crypto.Util import asn1
 from base64 import b64decode
 
-# TESTS
+
 # keys = '/root/ansiblar/tmp'
 # keys = 'tmp/192.168.122.76'
 
@@ -27,18 +27,22 @@ def sign_init(file_name):
     return pub_key, signature
 
 def check_sign(file_name, k_pem, s_pem):
-    def read_pem(file):
+    def read_pem(file, b=False):
         if b:
             with open(file, "r") as f:
                 return f.read()
+        else:
+            with open(file, "rb") as f:
+                return f.read()
     
     pubkey = RSA.importKey(read_pem(k_pem))
-    signature = read_pem(s_pem)
+    signature = read_pem(s_pem, True)
 
     hesh = SHA256.new()
     with open(file_name, "rb") as f:
         for chunk in iter(lambda: f.read(4096), b""):
             hesh.update(chunk)
+            
     # Переменная для проверки подписи
     check_sign = False
     try:
