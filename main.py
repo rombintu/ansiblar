@@ -15,6 +15,7 @@ import signature
 
 
 # GLOBAL
+keys = '/root/ansiblar/tmp/'
 config = os.getcwd() + '/config.json'
 tmp = os.getcwd() + '/tmp'
 
@@ -88,7 +89,7 @@ def getlogs():
         except:
             print("Директория уже существует, пропускается")
 
-        os.system(f'scp -P {ports[i]} {users[i]}@{host}:/tmp/* {tmp}/{host}')
+        os.system(f'scp -P {ports[i]} {users[i]}@{host}:/{keys}/* {tmp}/{host}')
         audit_data = Audited(host, date)
         # Добавляем
         session.add(audit_data)
@@ -97,34 +98,34 @@ def getlogs():
     session.commit()
 
 def check_sign():
-    check = False
-    def func(dir):
-        if check:
-            print("Signature OK")
-        else:
-            print("Signature NOT OK")
-
-
+    # try:
     files=[]
     files = [f for f in sorted(os.listdir(tmp))]
     for i, host in enumerate(files):
         print(f"[{i}]: {host}")
-    
-    try:
-        user_input = int(input('Enter [N]: '))
-        func(f"{tmp}/{files[user_input]}")
-    except Exception as e:
-        print(e)
+    user_input = int(input('Enter [N]: '))
+    check = signature.check_sign(
+        f"{tmp}/{files[user_input]}/audit.log",
+        f'{tmp}/{files[user_input]}/k.pem',
+        f'{tmp}/{files[user_input]}/s.pem'
+                                )
+    if check:
+        print("Signature OK")
+    else:
+        print("Signature NOT OK")
+    # except Exception as e:
+    #     print(e)
 
 def sign():
     def write_pem(content, file):
-        with open(file, 'w') as f:
+        with open(file, 'wb') as f:
             f.write(str(content))
 
-    s, k = signature.sign_init(f"{tmp}/audit.log")
-    write_pem(s, f"{tmp}/s.pem")
-    write_pem(k, f"{tmp}/k.pem")
+    s, k = signature.sign_init(f"{keys}/audit.log")
+    write_pem(s, f"{keys}/s.pem")
+    write_pem(k, f"{keys}/k.pem")
 
+    print('Подписан файл')
 
 if __name__ == "__main__":
     print('Start program...')
@@ -136,11 +137,12 @@ if __name__ == "__main__":
         select()
     elif user_command == 'getlogs':
         getlogs()
+        check_sign()
     elif user_command == 'ping':
         ping()
-    elif user_command == 'check':
-        check_sign()
     elif user_command == 'sign':
         sign()
+    elif user_command == 'check':
+        check_sign()
     else:
         print('Command not found')

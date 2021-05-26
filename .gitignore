@@ -5,3 +5,4 @@ inventory
 __pycache__
 Мануал_для_маленьких.txt
 db.*
+.vs*
