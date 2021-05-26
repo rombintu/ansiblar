@@ -66,3 +66,13 @@ python main.py select
     output:  
     | Host: 192.168.1.35 | Last update: 2021-05-24 14:43:22.469166 |  
     | Host: 192.168.1.36 | Last update: 2021-05-24 14:43:22.469166 |  
+
+### Проверка подписи (на сервере)
+```
+python main.py check
+```
+    output:  
+    Start program...
+    [0]: 192.168.122.76
+    Enter [N]: 0 
+    Signature OK
