@@ -9,7 +9,7 @@ from sqlalchemy.orm import sessionmaker
 from model import Audited
 
 from datetime import datetime
-
+from base64 import b64decode
 # ЭЦП
 import signature
 
@@ -119,10 +119,10 @@ def check_sign():
 def sign():
     def write_pem(content, file):
         with open(file, 'wb') as f:
-            f.write(str(content))
+            f.write(content)
 
     s, k = signature.sign_init(f"{keys}/audit.log")
-    write_pem(s, f"{keys}/s.pem")
+    write_pem(b64decode(s), f"{keys}/s.pem")
     write_pem(k, f"{keys}/k.pem")
 
     print('Подписан файл')

@@ -20,7 +20,7 @@ def sign_init(file_name):
 
     # Получаем открытый ключ из закрытого
     pubkey = key.publickey()
-    print(pubkey, signature)
+
     return pubkey, signature
 
 def check_sign(file_name, k_pem, s_pem):
