@@ -28,7 +28,7 @@ def sign_init(file_name):
 
 def check_sign(file_name, k_pem, s_pem):
     def read_pem(file, b=False):
-        if b:
+        if not b:
             with open(file, "r") as f:
                 return f.read()
         else:
@@ -42,7 +42,7 @@ def check_sign(file_name, k_pem, s_pem):
     with open(file_name, "rb") as f:
         for chunk in iter(lambda: f.read(4096), b""):
             hesh.update(chunk)
-            
+
     # Переменная для проверки подписи
     check_sign = False
     try:

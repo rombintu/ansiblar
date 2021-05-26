@@ -16,7 +16,7 @@ import signature
 
 
 # GLOBAL
-# keys = '/root/ansiblar/tmp'
+keys = '/root/ansiblar/tmp'
 # keys = 'tmp/192.168.122.76'
 config = os.getcwd() + '/config.json'
 tmp = os.getcwd() + '/tmp'
