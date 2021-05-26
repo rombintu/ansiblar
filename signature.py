@@ -6,9 +6,13 @@ from Crypto.Signature import pkcs1_15
 from Crypto.Util import asn1
 from base64 import b64decode
 
+# TESTS
+# keys = '/root/ansiblar/tmp'
+# keys = 'tmp/192.168.122.76'
+
 def sign_init(file_name):
     # Генерируем новый ключ
-    key = RSA.generate(1024, os.urandom)
+    private_key = RSA.generate(1024, os.urandom)
     # Получаем хэш файла
     hesh = SHA256.new()
     with open(file_name, "rb") as f:
@@ -16,20 +20,20 @@ def sign_init(file_name):
             hesh.update(chunk)
 
     # Подписываем хэш
-    signature = pkcs1_15.new(key).sign(hesh)
+    signature = pkcs1_15.new(private_key).sign(hesh)
 
     # Получаем открытый ключ из закрытого
-    pubkey = key.publickey()
-
-    return pubkey, signature
+    pub_key = private_key.publickey().exportKey(format='PEM')
+    return pub_key, signature
 
 def check_sign(file_name, k_pem, s_pem):
     def read_pem(file):
-        with open(file, "rb") as f:
-            return f.read()
+        if b:
+            with open(file, "r") as f:
+                return f.read()
     
-    pubkey = read_pem(k_pem)
-    signature = b64decode(read_pem(s_pem))
+    pubkey = RSA.importKey(read_pem(k_pem))
+    signature = read_pem(s_pem)
 
     hesh = SHA256.new()
     with open(file_name, "rb") as f:
